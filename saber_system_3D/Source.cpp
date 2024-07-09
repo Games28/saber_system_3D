@@ -60,16 +60,7 @@ public:
 		mat4_t rotation_matrix_z = mat4_make_rotation_z(mesh->rotation.z);
 
 
-		//initialize the target looking at the positive z-axis
-		//if (index == 1)
-		//{
-		//	vec3_t target = mesh->translation;
-		//
-		//	vec3_t up_direction = { 0,1,0 };
-		//	//create view matrix
-		//	view_matrix = mat4_look_at(get_camera_position(), target, up_direction);
-		//
-		//}
+		
 		vec3_t target = get_camera_lookat_target();
 
 		vec3_t up_direction = { 0,1,0 };
