@@ -273,8 +273,8 @@ public:
 		//voxel testing code/////////////////////////////////////////////////////////////////////////////
 		
 		//does not work
-		//load_texture_mesh("assets/snowspeeder.obj", "assets/Textspeeder.png", vec3_new(1.0f, 1.0f, 1.0f),
-			//vec3_new(0.0f, 0.0f, + 4), vec3_new(0, 0, 0));
+		load_texture_mesh("assets/snowspeeder.obj", "assets/Textspeeder.png", vec3_new(1.0f, 1.0f, 1.0f),
+			vec3_new(0.0f, 0.0f, + 4), vec3_new(0, 0, 0));
 			
 		//does work 
 		//load_color_mesh("assets/mountains.obj", olc::CYAN, vec3_new(1.0f, 1.0f, 1.0f), vec3_new(0, 0, +4), vec3_new(0, 0, 0));
