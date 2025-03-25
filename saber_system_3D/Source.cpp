@@ -272,20 +272,21 @@ public:
 		
 		//voxel testing code/////////////////////////////////////////////////////////////////////////////
 		
-		load_texture_mesh("assets/snowspeeder.obj", "assets/Textspeeder.png", vec3_new(1.0f, 1.0f, 1.0f),
-			vec3_new(0.0f, 0.0f, + 4), vec3_new(0, 0, 0));
+		//does not work
+		//load_texture_mesh("assets/snowspeeder.obj", "assets/Textspeeder.png", vec3_new(1.0f, 1.0f, 1.0f),
+			//vec3_new(0.0f, 0.0f, + 4), vec3_new(0, 0, 0));
+			
+		//does work 
 		//load_color_mesh("assets/mountains.obj", olc::CYAN, vec3_new(1.0f, 1.0f, 1.0f), vec3_new(0, 0, +4), vec3_new(0, 0, 0));
 		
-		//load_color_mesh("f22.obj", olc::GREEN, vec3_new(1.0f, 0.2f, 1.0f),
-			//vec3_new(get_camera_position().x, get_camera_position().y, get_camera_position().z + 4), vec3_new(0, 0, 0));
-	
-		//load_color_mesh("f22.obj", olc::GREEN, vec3_new(1.0f, 1.0f, 1.0f),
-			//vec3_new(+2,0, +8), vec3_new(0, 0, 0));
+		//does work
+		//load_texture_mesh("assets/drone.obj", "assets/drone.png", vec3_new(1.0f, 1.0f, 1.0f),
+			//vec3_new(0.0f, 0.0f, + 4), vec3_new(0, 0, 0));
 
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////
 
-		//load_cube_mesh_data(DEFUALT, olc::CYAN, "./assets/bluestone.png", vec3_new(1, 1, 1), vec3_new(0, 0,+5), vec3_new(0, 0, 0));
+		// raycaster rework
 		 //west walls /right side
 		
 		//for (int z = 0; z < tilecount * 2; z += 2)
