@@ -33,7 +33,7 @@ mesh_t* get_mesh(int index);
 int get_num_meshes();
 void load_texture_mesh(const char* obj_filename,const char* png_filename,vec3_t scale, vec3_t tranlation, vec3_t rotation);
 void load_color_mesh(const char* obj_filename, olc::Pixel p,  vec3_t scale, vec3_t tranlation, vec3_t rotation);
-void load_cube_mesh_data();
+void load_cube_mesh_data( int side, olc::Pixel color,const char* png_filename, vec3_t scale, vec3_t translation, vec3_t rotation);
 void load_obj_file_data(mesh_t* mesh,const char* filename);
 void load_mesh_png_data(mesh_t* mesh, const char* filename);
 #endif // !MESH_H

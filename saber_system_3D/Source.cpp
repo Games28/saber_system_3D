@@ -32,7 +32,7 @@ public:
 	
 	std::vector<triangle_t> trangles_to_render;
 	
-	Render_Method render_method = RENDER_FILL_TRIANGLE_WIRE;
+	Render_Method render_method = RENDER_FILL_TRIANGLE;
 	Cull_Method cull_method = CULL_BACKFACE;
 	lighting_method light_method = FLAT_SHADING;
 	mat4_t proj_matrix;
@@ -80,9 +80,9 @@ public:
 
 			//gets the x,y,z coords for each face triangle point location. as a unit length (1)
 			//  from the origin(center)
-			face_vertices[0] = mesh->vertices[mesh_face.a];
-			face_vertices[1] = mesh->vertices[mesh_face.b];
-			face_vertices[2] = mesh->vertices[mesh_face.c];
+			face_vertices[0] = mesh->vertices[mesh_face.a - 1];
+			face_vertices[1] = mesh->vertices[mesh_face.b - 1];
+			face_vertices[2] = mesh->vertices[mesh_face.c - 1];
 
 
 
@@ -244,15 +244,25 @@ public:
 
 	bool OnUserCreate() override
 	{
-		
+		int tilecount = 10;
+		enum TriangleSides
+		{
+			DEFUALT,
+			FRONT,
+			RIGHT,
+			LEFT,
+			BACK,
+			TOP,
+			BOTTOM
+		};
 		init_light(vec3_new(0, 0, 1));
 
 		float aspectx = (float)ScreenWidth() / (float)ScreenHeight();
 		float aspecty = (float)ScreenHeight() / (float)ScreenWidth();
 		float fovy = M_PI / 3.0f; // the same as 180/3 or 60degs
 		float fovx = (atan(fovy / 2) * aspectx) * 2.0f;
-		float znear = 0.5f;
-		float zfar = 20.0f;
+		float znear = 0.1f;
+		float zfar = 100.0f;
 
 
 		proj_matrix = mat4_make_perspective(fovy, aspecty, znear, zfar);
@@ -262,16 +272,69 @@ public:
 		
 		//voxel testing code/////////////////////////////////////////////////////////////////////////////
 		
-	
-		load_color_mesh("cube.obj", olc::CYAN, vec3_new(1.0f, 1.0f, 1.0f), vec3_new(0, 0, +8), vec3_new(0, 0, 0));
+		load_texture_mesh("assets/snowspeeder.obj", "assets/Textspeeder.png", vec3_new(1.0f, 1.0f, 1.0f),
+			vec3_new(0.0f, 0.0f, + 4), vec3_new(0, 0, 0));
+		//load_color_mesh("assets/mountains.obj", olc::CYAN, vec3_new(1.0f, 1.0f, 1.0f), vec3_new(0, 0, +4), vec3_new(0, 0, 0));
 		
-		load_color_mesh("cube.obj", olc::GREY, vec3_new(1.0f, 0.2f, 1.0f),
-			vec3_new(get_camera_position().x, get_camera_position().y, get_camera_position().z + 4), vec3_new(0, 0, 0));
+		//load_color_mesh("f22.obj", olc::GREEN, vec3_new(1.0f, 0.2f, 1.0f),
+			//vec3_new(get_camera_position().x, get_camera_position().y, get_camera_position().z + 4), vec3_new(0, 0, 0));
 	
-
+		//load_color_mesh("f22.obj", olc::GREEN, vec3_new(1.0f, 1.0f, 1.0f),
+			//vec3_new(+2,0, +8), vec3_new(0, 0, 0));
 
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////
+
+		//load_cube_mesh_data(DEFUALT, olc::CYAN, "./assets/bluestone.png", vec3_new(1, 1, 1), vec3_new(0, 0,+5), vec3_new(0, 0, 0));
+		 //west walls /right side
+		
+		//for (int z = 0; z < tilecount * 2; z += 2)
+		//{
+		//	load_cube_mesh_data( RIGHT, olc::CYAN, "./assets/bluestone.png", vec3_new(1, 1, 1), vec3_new(-7, 0, -2 + z), vec3_new(0, 0, 0));
+		//}
+		//
+		////east walls/ left side
+		//for (int z = 0; z < tilecount * 2; z += 2)
+		//{
+		//	load_cube_mesh_data(LEFT, olc::BLUE, "./assets/bluestone.png", vec3_new(1, 1, 1), vec3_new(+13, 0, -2 + z), vec3_new(0, 0, 0));
+		//}
+		//
+		////back wall / front side
+		//for (int x = 0; x < tilecount * 2; x += 2)
+		//{
+		//	load_cube_mesh_data( FRONT, olc::GREEN, "./assets/bluestone.png", vec3_new(1, 1, 1), vec3_new(-7 + x, 0, +10), vec3_new(0, 0, 0));
+		//}
+		//
+		//
+		////front wall / back side
+		//for (int x = 0; x < tilecount * 2; x += 2)
+		//{
+		//	load_cube_mesh_data( BACK, olc::DARK_CYAN, "./assets/bluestone.png", vec3_new(1, 1, 1), vec3_new(-7 + x, 0, -2), vec3_new(0, 0, 0));
+		//}
+		//
+		////floor
+		//for (int x = -5; x < tilecount * 2; x += 2)
+		//{
+		//
+		//	for (int z = 0; z < tilecount * 2; z += 2)
+		//	{
+		//		load_cube_mesh_data( TOP, olc::GREY, "./assets/colorstone.png", vec3_new(1, 1, 1), vec3_new(x, -2, -2 + z), vec3_new(0, 0, 0));
+		//	}
+		//
+		//}
+
+		//ceiling
+
+	   //for (int x = -5; x < tilecount * 2; x += 2)
+	   //{
+	   //
+	   //    for (int z = 0; z < tilecount * 2; z += 2)
+	   //    {
+	   //        load_cube_mesh_data( BOTTOM, 0xff00ffff, "./assets/wood.png", vec3_new(1, 1, 1), vec3_new(x, +2, -2 + z), vec3_new(0, 0, 0));
+	   //    }
+	   //
+	   //}
+
 		depth_draw.Init(this);
 		
 		return true;
@@ -287,8 +350,8 @@ public:
 		if (GetKey(olc::F5).bPressed) { render_method = RENDER_TEXTURED; };
 		if (GetKey(olc::F6).bPressed) { render_method = RENDER_TEXTURED_WIRE; };
 		if (GetKey(olc::C).bPressed) { cull_method = CULL_BACKFACE; };
-		if (GetKey(olc::D).bPressed) { cull_method = CULL_NONE; };
-		//shading type
+		if (GetKey(olc::V).bPressed) { cull_method = CULL_NONE; };
+		//shading typecd
 		if (GetKey(olc::NP0).bPressed) { light_method = NO_LIGHTING; };
 		if (GetKey(olc::NP1).bPressed) { light_method = FLAT_SHADING; };
 
@@ -353,7 +416,7 @@ public:
 		
 		num_triangles_to_render = 0;
 		
-		
+		int m = get_num_meshes();
 
 
 		//update and render visible mesh_faces;
@@ -365,11 +428,11 @@ public:
 			
 			if (mesh_index == 1)
 			{
-				mesh->rotation.x += offsetX * fElapsedTime;
-				mesh->rotation.y += offsetY * fElapsedTime;
+				//mesh->rotation.x += offsetX * fElapsedTime;
+				//mesh->rotation.y += offsetY * fElapsedTime;
 				
 				
-				mesh->translation = vec3_new(get_camera_position().x , get_camera_position().y, get_camera_position().z + 4);
+				//mesh->translation = vec3_new(get_camera_position().x , get_camera_position().y, get_camera_position().z + 4);
 				
 			 }
 			
@@ -398,7 +461,7 @@ public:
 				{
 					
 					//testing
-					draw_triangle_fill(depth_draw,
+					draw_filled_triangle(depth_draw,
 						this,
 						(int)triangle.points[0].x, (int)triangle.points[0].y, (int)triangle.points[0].z, (int)triangle.points[0].w,
 						(int)triangle.points[1].x, (int)triangle.points[1].y, (int)triangle.points[1].z, (int)triangle.points[1].w,

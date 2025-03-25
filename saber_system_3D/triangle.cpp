@@ -118,6 +118,7 @@ void draw_filled_triangle(DepthDrawer& depth_draw, olc::PixelGameEngine* pge,
 	olc::Pixel color)
 {
 	
+	// We need to sort the vertices by y-coordinate ascending (y0 < y1 < y2)
 	if (y0 > y1) {
 		int_swap(&y0, &y1);
 		int_swap(&x0, &x1);
@@ -136,53 +137,55 @@ void draw_filled_triangle(DepthDrawer& depth_draw, olc::PixelGameEngine* pge,
 		float_swap(&z0, &z1);
 		float_swap(&w0, &w1);
 	}
-	
+
 	// Create three vector points after we sort the vertices
-	vec4_t point_a = { (float)x0, (float)y0, z0, w0 };
-	vec4_t point_b = { (float)x1, (float)y1, z1, w1 };
-	vec4_t point_c = { (float)x2, (float)y2, z2, w2 };
-	
+	vec4_t point_a = { x0, y0, z0, w0 };
+	vec4_t point_b = { x1, y1, z1, w1 };
+	vec4_t point_c = { x2, y2, z2, w2 };
+
+	///////////////////////////////////////////////////////
 	// Render the upper part of the triangle (flat-bottom)
+	///////////////////////////////////////////////////////
 	float inv_slope_1 = 0;
 	float inv_slope_2 = 0;
-	
+
 	if (y1 - y0 != 0) inv_slope_1 = (float)(x1 - x0) / abs(y1 - y0);
 	if (y2 - y0 != 0) inv_slope_2 = (float)(x2 - x0) / abs(y2 - y0);
-	
+
 	if (y1 - y0 != 0) {
 		for (int y = y0; y <= y1; y++) {
 			int x_start = x1 + (y - y1) * inv_slope_1;
 			int x_end = x0 + (y - y0) * inv_slope_2;
-	
+
 			if (x_end < x_start) {
 				int_swap(&x_start, &x_end); // swap if x_start is to the right of x_end
 			}
-	
+
 			for (int x = x_start; x < x_end; x++) {
 				// Draw our pixel with a solid color
-				draw_triangle_pixel(depth_draw, pge,x, y, color, point_a, point_b, point_c);
+				draw_triangle_pixel(depth_draw, pge, x, y, color, point_a, point_b, point_c);
 			}
 		}
 	}
-	
-	
+
+	///////////////////////////////////////////////////////
 	// Render the bottom part of the triangle (flat-top)
-   ///////////////////////////////////////////////////////
-	float inv_slope_1_2 = 0;
-	float inv_slope_2_2 = 0;
-	
-	if (y2 - y1 != 0) inv_slope_1_2 = (float)(x2 - x1) / abs(y2 - y1);
-	if (y2 - y0 != 0) inv_slope_2_2 = (float)(x2 - x0) / abs(y2 - y0);
-	
+	///////////////////////////////////////////////////////
+	inv_slope_1 = 0;
+	inv_slope_2 = 0;
+
+	if (y2 - y1 != 0) inv_slope_1 = (float)(x2 - x1) / abs(y2 - y1);
+	if (y2 - y0 != 0) inv_slope_2 = (float)(x2 - x0) / abs(y2 - y0);
+
 	if (y2 - y1 != 0) {
 		for (int y = y1; y <= y2; y++) {
-			int x_start = x1 + (y - y1) * inv_slope_1_2;
-			int x_end = x0 + (y - y0) * inv_slope_2_2;
-	
+			int x_start = x1 + (y - y1) * inv_slope_1;
+			int x_end = x0 + (y - y0) * inv_slope_2;
+
 			if (x_end < x_start) {
 				int_swap(&x_start, &x_end); // swap if x_start is to the right of x_end
 			}
-	
+
 			for (int x = x_start; x < x_end; x++) {
 				// Draw our pixel with a solid color
 				draw_triangle_pixel(depth_draw, pge, x, y, color, point_a, point_b, point_c);
@@ -190,6 +193,7 @@ void draw_filled_triangle(DepthDrawer& depth_draw, olc::PixelGameEngine* pge,
 		}
 	}
 }
+
 
 void draw_triangle_pixel(DepthDrawer& depth_draw, olc::PixelGameEngine* pge, int x, int y, olc::Pixel color, vec4_t point_a, vec4_t point_b, vec4_t point_c)
 {
