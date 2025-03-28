@@ -219,11 +219,14 @@ void load_obj_file_data(mesh_t* mesh,const char* filename)
 	   //face information
 		if (strncmp(line, "f ", 2) == 0)
 		{
+			
+
 			int vertex_indices[3];
 			int texture_indices[3];
 			int normal_indices[3];
 	
 				face_t face;
+				
 				
 				sscanf_s(line, "f %d/%d/%d %d/%d/%d %d/%d/%d",
 					&vertex_indices[0], &texture_indices[0], &normal_indices[0],

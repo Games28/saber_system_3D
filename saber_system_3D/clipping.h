@@ -2,6 +2,7 @@
 #define CLIPPING_H
 #include "Vector.h"
 #include "triangle.h"
+#include "Vector.h"
 
 #define MAX_NUM_POLY_VERTICES 10
 

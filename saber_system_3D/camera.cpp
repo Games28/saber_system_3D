@@ -1,74 +1,89 @@
 #include "camera.h"
 
-static camera_t camera;
+//static camera_t camera;
 
-void init_camera(vec3_t position, vec3_t direction)
+
+
+Camera::Camera()
 {
-	camera.position = position;
-	camera.direction = direction;
-	camera.forward_velocity = vec3_new(0, 0, 0);
-	camera.yaw = 0.0f;
-	camera.pitch = 0.0f;
-
+	position = vec3_new(0, 0, 0);
+	direction = vec3_new(0, 0, 0);
+	forward_velocity = vec3_new(0, 0, 0);
+	yaw = 0.0f;
+	pitch = 0.0f;
 }
 
-vec3_t get_camera_position()
+Camera::~Camera()
 {
-	return camera.position;
 }
 
-vec3_t get_camera_direction()
+//void Camera::init_camera(vec3_t position, vec3_t direction)
+//{
+//	position = vec3_new(0, 0, 0);
+//	direction = vec3_new(0, 0, 0);
+//	forward_velocity = vec3_new(0, 0, 0);
+//	yaw = 0.0f;
+//	pitch = 0.0f;
+//
+//}
+
+vec3_t Camera::get_camera_position()
 {
-	return camera.direction;
+	return position;
 }
 
-vec3_t get_camera_forward_velocity()
+vec3_t Camera::get_camera_direction()
 {
-	return camera.forward_velocity;
+	return direction;
 }
 
-float get_camera_yaw()
+vec3_t Camera::get_camera_forward_velocity()
 {
-	return camera.yaw;
+	return forward_velocity;
 }
 
-float get_camera_pitch()
+float Camera::get_camera_yaw()
 {
-	return camera.pitch;
+	return yaw;
 }
 
-void set_new_camera_position(vec3_t position)
+float Camera::get_camera_pitch()
 {
-	camera.position = position;
+	return pitch;
 }
 
-void set_new_camera_direction(vec3_t direction)
+void Camera::set_new_camera_position(vec3_t position)
 {
-	camera.direction = direction;
+	position = position;
 }
 
-void set_new_camera_forward_velocity(vec3_t forward_velocity)
+void Camera::set_new_camera_direction(vec3_t direction)
 {
-	camera.forward_velocity = forward_velocity;
+	direction = direction;
 }
 
-void rotate_camera_yaw(float angle)
+void Camera::set_new_camera_forward_velocity(vec3_t forward_velocity)
 {
-	camera.yaw += angle;
+	forward_velocity = forward_velocity;
 }
 
-void rotate_camera_pitch(float angle)
+void Camera::rotate_camera_yaw(float angle)
 {
-	camera.pitch += angle;
+	yaw += angle;
 }
 
-vec3_t get_camera_lookat_target()
+void Camera::rotate_camera_pitch(float angle)
+{
+  pitch += angle;
+}
+
+vec3_t Camera::get_camera_lookat_target()
 {
 	// Initialize the target looking at the positive z-axis
 	vec3_t target = { 0, 0, 1 };
 
-	mat4_t camera_yaw_rotation = mat4_make_rotation_y(camera.yaw);
-	mat4_t camera_pitch_rotation = mat4_make_rotation_x(camera.pitch);
+	mat4_t camera_yaw_rotation = mat4_make_rotation_y(yaw);
+	mat4_t camera_pitch_rotation = mat4_make_rotation_x(pitch);
 
 	// Create camera rotation matrix based on yaw and pitch
 	mat4_t camera_rotation = mat4_identity();
@@ -77,31 +92,31 @@ vec3_t get_camera_lookat_target()
 
 	// Update camera direction based on the rotation
 	vec4_t camera_direction = mat4_mul_vec4(camera_rotation, vec4_from_vec3(target));
-	camera.direction = vec3_from_vec4(camera_direction);
+	direction = vec3_from_vec4(camera_direction);
 
 	// Offset the camera position in the direction where the camera is pointing at
-	target = vec3_add(camera.position, camera.direction);
+	target = vec3_add(position, direction);
 
 	return target;
 }
 
-void update_camera_position(vec3_t position)
+void Camera::update_camera_position(vec3_t position)
 {
-	camera.position.x += position.x;
-	camera.position.y += position.y;
-	camera.position.z += position.z;
+	position.x += position.x;
+	position.y += position.y;
+	position.z += position.z;
 }
 
-void update_camera_direction(vec3_t direction)
+void Camera::update_camera_direction(vec3_t direction)
 {
-	camera.direction.x += direction.x;
-	camera.direction.y += direction.y;
-	camera.direction.z += direction.z;
+	direction.x += direction.x;
+	direction.y += direction.y;
+	direction.z += direction.z;
 }
 
-void update_camera_forward_velocity(vec3_t forward_velocity)
+void Camera::update_camera_forward_velocity(vec3_t forward_velocity)
 {
-	camera.forward_velocity.x += forward_velocity.x;
-	camera.forward_velocity.y += forward_velocity.y;
-	camera.forward_velocity.z += forward_velocity.z;
+	forward_velocity.x += forward_velocity.x;
+	forward_velocity.y += forward_velocity.y;
+	forward_velocity.z += forward_velocity.z;
 }

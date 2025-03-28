@@ -188,7 +188,8 @@ void draw_filled_triangle(DepthDrawer& depth_draw, olc::PixelGameEngine* pge,
 
 			for (int x = x_start; x < x_end; x++) {
 				// Draw our pixel with a solid color
-				draw_triangle_pixel(depth_draw, pge, x, y, color, point_a, point_b, point_c);
+				
+					draw_triangle_pixel(depth_draw, pge, x, y, color, point_a, point_b, point_c);
 			}
 		}
 	}
@@ -218,8 +219,9 @@ void draw_triangle_pixel(DepthDrawer& depth_draw, olc::PixelGameEngine* pge, int
 	float currentdepth = depth_draw.get_z_buffer(x, y);
 
 
-	if (interpolated_reciprocal_w < currentdepth)
+	if (interpolated_reciprocal_w < currentdepth )
 	{
+		
 		pge->Draw(x, y, color);
 
 
@@ -303,10 +305,13 @@ void draw_triangle_texel(DepthDrawer& depth_draw, olc::PixelGameEngine* pge, int
 	
 	if (interpolated_reciprocal_w < currentdepth)
 	{
-		pge->Draw(x, y, sprite->GetPixel(tex_x, tex_y));
-	
-		
-		depth_draw.set_z_buffer(interpolated_reciprocal_w, x, y);
+		if (sprite->GetPixel(tex_x, tex_y) != olc::BLANK)
+		{
+			pge->Draw(x, y, sprite->GetPixel(tex_x, tex_y));
+
+
+			depth_draw.set_z_buffer(interpolated_reciprocal_w, x, y);
+		}
 	}
 	
 
