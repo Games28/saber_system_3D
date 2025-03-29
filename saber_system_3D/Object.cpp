@@ -9,7 +9,8 @@ Object::Object(vec3_t scale, vec3_t translation, vec3_t rotation)
 
 void Object::load_cube_mesh(int side, olc::Pixel color, const char* png_filename)
 {
-	load_cube_mesh_data(side, color, png_filename,scale,translation,rotation);
+	mesh = load_cube_mesh_data(side, color, png_filename,scale,translation,rotation);
+	int i = 0;
 }
 
 void Object::load_obj_mesh(const char* obj_filename, const char* png_filename)
@@ -17,7 +18,7 @@ void Object::load_obj_mesh(const char* obj_filename, const char* png_filename)
 	load_texture_mesh(obj_filename, png_filename, scale, translation, rotation);
 }
 
-void Object::process_graphics_pipline_stages(olc::PixelGameEngine* pge,mesh_t* mesh, Camera& camera, int index)
+void Object::process_graphics_pipline_stages(olc::PixelGameEngine* pge,mesh_t* mesh, Camera& camera)
 {
 	mat4_t scale_matrix = mat4_make_scale(mesh->scale.x, mesh->scale.y, mesh->scale.z);
 	mat4_t translation_matrix = mat4_make_translation(mesh->translation.x, mesh->translation.y, mesh->translation.z);
@@ -282,40 +283,12 @@ void Object::Render(olc::PixelGameEngine* pge, DepthDrawer& depth_draw)
 
 void Object::Update(olc::PixelGameEngine* pge, Camera& camera, float deltatime)
 {
-	//update and render visible mesh_faces;
-	for (int mesh_index = 0; mesh_index < get_num_meshes(); mesh_index++)
-	{
-		mesh_t* mesh = get_mesh(mesh_index);
-
-
-
-		if (mesh_index == 0)
-		{
-			float distx = mesh->translation.x - camera.get_camera_position().x;
-			//float disty = mesh->translation.y - get_camera_position().y;
-			float distz = mesh->translation.z - camera.get_camera_position().z;
-
-			float angleplayertoobj = atan2f(distx, distz);
-
-			//mesh->rotation.x += offsetX * fElapsedTime;
-			//mesh->rotation.y = angleplayertoobj;
-
-
-			//mesh->translation = vec3_new(get_camera_position().x , get_camera_position().y, get_camera_position().z + 4);
-
-		}
-
-		//mesh->rotation.x += 0.5f * fElapsedTime;
-	  // mesh->rotation.y += 2.0f * fElapsedTime;
-		//mesh->rotation.z += 0.5f * fElapsedTime;
-	//mesh.scale.x += 0.02f* fElapsedTime;
-	//mesh.scale.y += 0.02f* fElapsedTime;
-	//mesh.translation.x += 0.01f;
+	
 
 
 
 
-		process_graphics_pipline_stages(pge,mesh,camera, mesh_index);
+		process_graphics_pipline_stages(pge,mesh,camera);
 
-	}
+	
 }

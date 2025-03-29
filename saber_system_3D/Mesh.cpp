@@ -84,7 +84,7 @@ void load_color_mesh(const char* obj_filename, olc::Pixel p, vec3_t scale, vec3_
 	meshes.push_back(new_mesh);
 }
 
-void load_cube_mesh_data(int side, olc::Pixel color,const char* png_filename, vec3_t scale, vec3_t translation, vec3_t rotation)
+mesh_t* load_cube_mesh_data(int side, olc::Pixel color,const char* png_filename, vec3_t scale, vec3_t translation, vec3_t rotation)
 {
 	mesh_t* new_mesh = new mesh_t;
 	
@@ -182,7 +182,8 @@ void load_cube_mesh_data(int side, olc::Pixel color,const char* png_filename, ve
 	new_mesh->scale = scale;
 	new_mesh->translation = translation;
 	
-	meshes.push_back(new_mesh);
+	//meshes.push_back(new_mesh);
+	return new_mesh;
 }
 
 void load_obj_file_data(mesh_t* mesh,const char* filename)

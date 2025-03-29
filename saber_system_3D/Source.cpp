@@ -457,17 +457,17 @@ public:
 		}
 
 		//update and render visible mesh_faces;
-		//for (int mesh_index = 0; mesh_index < get_num_meshes(); mesh_index++)
+		//for (int mesh_index = 0; mesh_index < objectlist[0]->mesh; mesh_index++)
 		//{
-		//	mesh_t* mesh = get_mesh(mesh_index);
+		//	mesh_t* mesh = objectlist[0]->mesh;
 		//	
 		//
 		//	
-		//	if (mesh_index == 0)
+		//	//if (mesh_index == 0)
 		//	{
-		//		float distx = mesh->translation.x - get_camera_position().x;
+		//		float distx = mesh->translation.x - camera.get_camera_position().x;
 		//		//float disty = mesh->translation.y - get_camera_position().y;
-		//		float distz = mesh->translation.z - get_camera_position().z ;
+		//		float distz = mesh->translation.z - camera.get_camera_position().z ;
 		//		
 		//		float angleplayertoobj = atan2f(distx, distz);
 		//		
@@ -489,11 +489,11 @@ public:
 		//
 		//
 		//
-		//	process_graphics_pipline_stages(mesh, mesh_index);
+		//	process_graphics_pipline_stages(mesh,0);
 		//	
 		//}
 			// currently working stuff
-			int t_length = (int)trangles_to_render.size();
+			int t_length = (int)objectlist[0]->trangles_to_render.size();
 
 
 			//collision test
@@ -510,7 +510,7 @@ public:
 
 			//for (int i = 0; i < t_length; i++)
 			//{
-			//	triangle_t triangle = trangles_to_render[i];
+			//	triangle_t triangle = objectlist[0]->trangles_to_render[i];
 			//
 			//
 			//	if (render_method == RENDER_FILL_TRIANGLE || render_method == RENDER_FILL_TRIANGLE_WIRE)
@@ -562,8 +562,8 @@ public:
 			//}
 			//
 		    //trangles_to_render.clear();
-		
-		 //  depth_draw.Reset();
+		 	//
+		    //depth_draw.Reset();
 
 		return true;
 	}

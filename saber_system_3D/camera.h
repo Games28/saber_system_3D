@@ -43,6 +43,6 @@ private:
 	vec3_t forward_velocity;
 	float yaw;
 	float pitch;
-}
+};
 
 #endif // !CAMERA_H

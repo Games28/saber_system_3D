@@ -19,15 +19,16 @@ public:
 
 	void load_obj_mesh(const char* obj_filename, const char* png_filename);
 
-	void process_graphics_pipline_stages(olc::PixelGameEngine* pge, mesh_t* mesh, Camera& camera, int index);
+	void process_graphics_pipline_stages(olc::PixelGameEngine* pge, mesh_t* mesh, Camera& camera);
 
 	void Render(olc::PixelGameEngine* pge, DepthDrawer& depthdrawer);
 
 	void Update(olc::PixelGameEngine* pge,Camera& camera, float deltatime);
-private:
+public:
 	vec3_t scale;
 	vec3_t translation;
 	vec3_t rotation;
+	mesh_t* mesh;
 
 	std::vector<triangle_t> trangles_to_render;
 
