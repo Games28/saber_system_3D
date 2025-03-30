@@ -12,6 +12,7 @@
 //#include "clipping.h"
 //#include "aabb3.h"
 #include "Object.h"
+#include "aabb3.h"
 
 
 #define WINDOW_HEIGHT 300
