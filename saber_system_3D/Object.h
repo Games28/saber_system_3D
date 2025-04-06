@@ -19,20 +19,22 @@ public:
 
 	void load_obj_mesh(const char* obj_filename, const char* png_filename);
 
-	void process_graphics_pipline_stages(olc::PixelGameEngine* pge, mesh_t* mesh, Camera& camera);
+	void process_graphics_pipline_stages(olc::PixelGameEngine* pge);
 
 	void Render(olc::PixelGameEngine* pge, DepthDrawer& depthdrawer);
 
-	void Update(olc::PixelGameEngine* pge,Camera& camera, float deltatime);
+	void Update(olc::PixelGameEngine* pge, float deltatime);
 public:
 	vec3_t scale;
 	vec3_t translation;
 	vec3_t rotation;
 	mesh_t* mesh;
+	bool ispickedup = false;
+	std::vector<vec3_t*> points;
 
 	std::vector<triangle_t> trangles_to_render;
 
-	Render_Method render_method = RENDER_FILL_TRIANGLE;
+	Render_Method render_method = RENDER_TEXTURED;
 	Cull_Method cull_method = CULL_BACKFACE;
 	lighting_method light_method = FLAT_SHADING;
 	mat4_t proj_matrix;

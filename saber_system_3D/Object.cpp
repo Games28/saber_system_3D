@@ -11,6 +11,7 @@ void Object::load_cube_mesh(int side, olc::Pixel color, const char* png_filename
 {
 	mesh = load_cube_mesh_data(side, color, png_filename,scale,translation,rotation);
 	int i = 0;
+	
 }
 
 void Object::load_obj_mesh(const char* obj_filename, const char* png_filename)
@@ -18,7 +19,7 @@ void Object::load_obj_mesh(const char* obj_filename, const char* png_filename)
 	load_texture_mesh(obj_filename, png_filename, scale, translation, rotation);
 }
 
-void Object::process_graphics_pipline_stages(olc::PixelGameEngine* pge,mesh_t* mesh, Camera& camera)
+void Object::process_graphics_pipline_stages(olc::PixelGameEngine* pge)
 {
 	mat4_t scale_matrix = mat4_make_scale(mesh->scale.x, mesh->scale.y, mesh->scale.z);
 	mat4_t translation_matrix = mat4_make_translation(mesh->translation.x, mesh->translation.y, mesh->translation.z);
@@ -28,11 +29,11 @@ void Object::process_graphics_pipline_stages(olc::PixelGameEngine* pge,mesh_t* m
 
 
 
-	vec3_t target = camera.get_camera_lookat_target();
+	vec3_t target = get_camera_lookat_target();
 
 	vec3_t up_direction = { 0,1,0 };
 	//create view matrix
-	view_matrix = mat4_look_at(camera.get_camera_position(), target, up_direction);
+	view_matrix = mat4_look_at(get_camera_position(), target, up_direction);
 	//trangles_to_render.clear();
 
 	int num_faces = (int)mesh->faces.size();
@@ -197,7 +198,7 @@ void Object::process_graphics_pipline_stages(olc::PixelGameEngine* pge,mesh_t* m
 			//currently working
 
 			trangles_to_render.push_back(projected_triangle);
-
+			int i = 0;
 
 
 		}
@@ -278,17 +279,17 @@ void Object::Render(olc::PixelGameEngine* pge, DepthDrawer& depth_draw)
 
 	trangles_to_render.clear();
 
-	depth_draw.Reset();
+	
 }
 
-void Object::Update(olc::PixelGameEngine* pge, Camera& camera, float deltatime)
+void Object::Update(olc::PixelGameEngine* pge, float deltatime)
 {
 	
 
 
 
 
-		process_graphics_pipline_stages(pge,mesh,camera);
+		process_graphics_pipline_stages(pge);
 
 	
 }

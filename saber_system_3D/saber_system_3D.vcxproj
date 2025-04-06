@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aabb3.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="clipping.cpp" />
     <ClCompile Include="depthdrawer.cpp" />
@@ -137,6 +139,7 @@
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="RIgidSurface.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="triangle.cpp" />
@@ -148,14 +151,17 @@
     <ClInclude Include="clipping.h" />
     <ClInclude Include="depthdrawer.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="IntersectData.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
+    <ClInclude Include="RIgidSurface.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="triangle.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="vf3d.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

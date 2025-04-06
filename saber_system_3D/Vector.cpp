@@ -146,6 +146,17 @@ void vec3_normalize(vec3_t* v)
     v->z /= length;
 }
 
+vec3_t vec3_Max(vec3_t a, vec3_t b)
+{
+    vec3_t result;
+
+    result.x = a.x > b.x ? a.x : b.x;
+    result.y = a.y > b.y ? a.y : b.y;
+    result.z = a.z > b.z ? a.z : b.z;
+    
+    return result;
+}
+
 
 
 vec3_t vec3_rotate_x(vec3_t v, float angle) {

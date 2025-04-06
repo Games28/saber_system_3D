@@ -3,31 +3,37 @@
 #include "Vector.h"
 #include "matrix.h"
 
-//typedef struct
-//{
-//	vec3_t position;
-//	vec3_t direction;
-//	vec3_t forward_velocity;
-//	float yaw;
-//	float pitch;
-//}camera_t;
-
-class Camera
+typedef struct
 {
-public:
-	Camera();
-	~Camera();
-	//void init_camera(vec3_t position, vec3_t direction);
+	vec3_t position;
+	vec3_t direction;
+	vec3_t forward_velocity;
+	vec3_t strafe; 
+	vec3_t strafe_velocity;
+	float yaw;
+	float pitch;
+}camera_t;
 
+//class Camera
+//{
+//public:
+	//Camera();
+	//~Camera();
+	//void init_camera(vec3_t position, vec3_t direction);
+     void init_camera();
 	vec3_t get_camera_position();
 	vec3_t get_camera_direction();
 	vec3_t get_camera_forward_velocity();
+	vec3_t get_camera_strafe_velocity();
+	vec3_t get_camera_stafe();
 	float get_camera_yaw();
 	float get_camera_pitch();
+
 
 	void set_new_camera_position(vec3_t position);
 	void set_new_camera_direction(vec3_t direction);
 	void set_new_camera_forward_velocity(vec3_t forward_velocity);
+	void set_new_camera_strafe_velocity(vec3_t strafe_velocity);
 
 	void rotate_camera_yaw(float angle);
 	void rotate_camera_pitch(float angle);
@@ -37,12 +43,12 @@ public:
 	void update_camera_position(vec3_t position);
 	void update_camera_direction(vec3_t direction);
 	void update_camera_forward_velocity(vec3_t forward_velocity);
-private:
-	vec3_t position;
-	vec3_t direction;
-	vec3_t forward_velocity;
-	float yaw;
-	float pitch;
-};
+//private:
+	//vec3_t position;
+	//vec3_t direction;
+	//vec3_t forward_velocity;
+	//float yaw;
+	//float pitch;
+//};
 
 #endif // !CAMERA_H
