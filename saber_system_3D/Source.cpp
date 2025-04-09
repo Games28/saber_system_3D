@@ -10,9 +10,9 @@
 //#include "triangle.h"
 #include "camera.h"
 //#include "clipping.h"
-//#include "aabb3.h"
+
 #include "Object.h"
-#include "aabb3.h"
+
 
 
 #define WINDOW_HEIGHT 300
@@ -53,18 +53,72 @@ public:
 	float offsetY = 0.0f;
 
 	//collsion detection
-
+	olc::Sprite* reticle = nullptr;
 	
-
+	float prev_rotation = 0, curr_rotation = 0;
 	//aabb3 collsion test
 	vec3_t cam_prev = { 0 }, cam_curr = { 0 }, cam_acc = { 0 }, cam_vel = { 0 };
 
 	//gravity force
 	vec3_t gravity = { 0, -9.8, 0 };
 	
-	//voxel stuff
-	static const int max_count = 5;
+
 	
+
+	//insighttest
+	bool isinsight(Object& object, int index, float fov, float& angle2player)
+	{
+		//auto Deg2Rad = [=](float angle) { return angle / 180.0f * 3.14159f; };
+		//auto ModuloTwoPI = [=](float angle)
+		//	{
+		//		float a = angle;
+		//		while (a < 0) a += 2.0f * 3.14159f;
+		//		while (a >= 2.0f * 3.14159f) a -= 2.0f * 3.14159f;
+		//		return a;
+		//	};
+		//
+		//
+		//float tempx = object.translation.x - get_camera_position().x;
+		//float tempz = object.translation.z - get_camera_position().z;
+		//
+		//angle2player = ModuloTwoPI(atan2(tempx, tempz));
+		//std::cout << "angle 2 player: " << angle2player << angle2player << std::endl;
+		//int y = ModuloTwoPI(get_camera_yaw());
+		//std::cout << "camera yaw: " << ModuloTwoPI(get_camera_yaw()) << std::endl;
+		//float fAligneda = (2.0f * 3.14159f - Deg2Rad(angle2player)) - 0.5f * 3.14159f;
+		//int x = abs(ModuloTwoPI(fAligneda + 3.14159f) - angle2player) < fov;
+		//std::cout << "abs" << x << std::endl;
+		////return abs(ModuloTwoPI(fAligneda + 3.14159f) - angle2player) < fov;
+		//return(y <= x);
+		vec4_t transformed_vertices[3];
+		for (int i = 0; object.trangles_to_render.size(); i++)
+		{
+			transformed_vertices[0] = object.trangles_to_render[i].points[0];
+			transformed_vertices[1] = object.trangles_to_render[i].points[1];
+			transformed_vertices[2] = object.trangles_to_render[i].points[2];
+
+			vec3_t face_normal = get_triangle_normal(transformed_vertices);
+
+
+
+
+
+			//find the vector between a point in the triangle (A) and the camera position
+			vec3_t camera_ray = vec3_sub(vec3_new(0, 0, 0), vec3_from_vec4(transformed_vertices[i]));
+
+
+			//Calculate how aligned the camera ray is with the face normal (using dot product)
+			float dot_normal_camera = vec3_dot(face_normal, camera_ray);
+			
+			
+			dot_normal_camera = dot_normal_camera * -1;
+
+			
+
+			return(dot_normal_camera < 0.978 && dot_normal_camera > 0.970);
+		}
+			
+	}
 	
 public:
 	
@@ -78,15 +132,24 @@ public:
 		mat4_t rotation_matrix_z;
 		vec3_t target;
 		
-		if (obj->ispickedup == true)
+		//if (obj->ispickedup == true)
+		//{
+		//	
+		//	target = obj->translation;
+		//	scale_matrix = mat4_make_scale(obj->mesh->scale.x, obj->mesh->scale.y, obj->mesh->scale.z);
+		//	translation_matrix = mat4_make_translation(obj->mesh->translation.x, obj->mesh->translation.y, obj->mesh->translation.z);
+		//	rotation_matrix_x = mat4_make_rotation_x(obj->mesh->rotation.x);
+		//	rotation_matrix_y = mat4_make_rotation_y(obj->mesh->rotation.y);
+		//	rotation_matrix_z = mat4_make_rotation_z(obj->mesh->rotation.z);
+		//}
+		if(index == 1)
 		{
-			
-			target = obj->translation;
+			target = get_camera_lookat_target();
 			scale_matrix = mat4_make_scale(obj->mesh->scale.x, obj->mesh->scale.y, obj->mesh->scale.z);
 			translation_matrix = mat4_make_translation(obj->mesh->translation.x, obj->mesh->translation.y, obj->mesh->translation.z);
-			rotation_matrix_x = mat4_make_rotation_x(obj->mesh->rotation.x);
+			rotation_matrix_x = mat4_make_rotation_x(-obj->mesh->rotation.x);
 			rotation_matrix_y = mat4_make_rotation_y(obj->mesh->rotation.y);
-			rotation_matrix_z = mat4_make_rotation_z(obj->mesh->rotation.z);
+			rotation_matrix_z = mat4_make_rotation_z(-obj->mesh->rotation.z);
 		}
 		else
 		{
@@ -101,6 +164,7 @@ public:
 		//create view matrix
 		view_matrix = mat4_look_at(get_camera_position(), target, up_direction);
 		//trangles_to_render.clear();
+		
 		
 		int num_faces = (int)obj->mesh->faces.size();
 		
@@ -133,15 +197,15 @@ public:
 				if (obj->ispickedup)
 				{
 					world_matrix = mat4_mul_mat4(scale_matrix, world_matrix);
-
-					//third movement/translation
+					//
+					////third movement/translation
 					world_matrix = mat4_mul_mat4(translation_matrix, world_matrix);
-
-					//seond rotation
+					//
+					////seond rotation
 					world_matrix = mat4_mul_mat4(rotation_matrix_z, world_matrix);
 					world_matrix = mat4_mul_mat4(rotation_matrix_y, world_matrix);
 					world_matrix = mat4_mul_mat4(rotation_matrix_x, world_matrix);
-
+					
 				}
 				else
 				{
@@ -182,8 +246,7 @@ public:
 				//Calculate how aligned the camera ray is with the face normal (using dot product)
 				float dot_normal_camera = vec3_dot(face_normal, camera_ray);
 		
-				std::cout << "dot normal camera: " << dot_normal_camera << std::endl;
-				//DrawString(30, 30, "dot normal camera:" + std::to_string(dot_normal_camera));
+				
 		
 				if (dot_normal_camera < 0)
 				{
@@ -281,7 +344,7 @@ public:
 				};
 				//currently working
 		
-				objectlist[0]->trangles_to_render.push_back(projected_triangle);
+				obj->trangles_to_render.push_back(projected_triangle);
 		
 		
 		
@@ -290,17 +353,12 @@ public:
 		
 		}
 	}
-	bool check_full_mesh_visiblity(mesh_t* mesh, int mesh_index)
-	{
-		
-
-		return true;
-	}
+	
 public:
 
 	bool OnUserCreate() override
 	{
-
+		reticle = new olc::Sprite("./assets/newicon.png");
 		init_camera();
 		int tilecount = 10;
 		enum TriangleSides
@@ -356,39 +414,43 @@ public:
 		obj->load_cube_mesh(FRONT, olc::CYAN, "./assets/r2idletest.png");
 
 		objectlist.push_back(obj);
-		//load_cube_mesh_data(FRONT, olc::CYAN, "./assets/r2idletest.png", vec3_new(1, 1, 0.2), vec3_new(0, 0, +5), vec3_new(0, 0, 0));
+		Object* obj2 = new Object(vec3_new(1, 1, 0.2), vec3_new(+4, 0, +5), vec3_new(0, 0, 0));
+		obj2->load_cube_mesh(FRONT, olc::CYAN, "./assets/r2idletest.png");
 		
-		for (int z = 0; z < tilecount * 2; z += 2)
-		{
-			Object* obj = new Object(vec3_new(1, 1, 1), vec3_new(-7, 0, -2 + z), vec3_new(0, 0, 0));
-			obj->load_cube_mesh( RIGHT, olc::CYAN, "./assets/bluestone.png");
-			objectlist.push_back(obj);
-		}
+		//objectlist.push_back(obj2);
+	//	load_cube_mesh_data(FRONT, olc::CYAN, "./assets/r2idletest.png", vec3_new(1, 1, 0.2), vec3_new(0, 0, +5), vec3_new(0, 0, 0));
 		
-		//east walls/ left side
-		for (int z = 0; z < tilecount * 2; z += 2)
-		{
-			Object* obj = new Object(vec3_new(1, 1, 1), vec3_new(+13, 0, -2 + z), vec3_new(0, 0, 0));
-			obj->load_cube_mesh(LEFT, olc::BLUE, "./assets/bluestone.png");
-			objectlist.push_back(obj);
-		}
-		
-		//back wall / front side
-		for (int x = 0; x < tilecount * 2; x += 2)
-		{
-			Object* obj = new Object(vec3_new(1, 1, 1), vec3_new(-7 + x, 0, +10), vec3_new(0, 0, 0));
-			obj->load_cube_mesh( FRONT, olc::GREEN, "./assets/bluestone.png");
-			objectlist.push_back(obj);
-		}
-		
-		
-		//front wall / back side
-		for (int x = 0; x < tilecount * 2; x += 2)
-		{
-			Object* obj = new Object(vec3_new(1, 1, 1), vec3_new(-7 + x, 0, -2), vec3_new(0, 0, 0));
-			obj->load_cube_mesh( BACK, olc::DARK_CYAN, "./assets/bluestone.png");
-			objectlist.push_back(obj);
-		}
+		//for (int z = 0; z < tilecount * 2; z += 2)
+		//{
+		//	Object* obj = new Object(vec3_new(1, 1, 1), vec3_new(-7, 0, -2 + z), vec3_new(0, 0, 0));
+		//	obj->load_cube_mesh( RIGHT, olc::CYAN, "./assets/bluestone.png");
+		//	objectlist.push_back(obj);
+		//}
+		//
+		////east walls/ left side
+		//for (int z = 0; z < tilecount * 2; z += 2)
+		//{
+		//	Object* obj = new Object(vec3_new(1, 1, 1), vec3_new(+13, 0, -2 + z), vec3_new(0, 0, 0));
+		//	obj->load_cube_mesh(LEFT, olc::BLUE, "./assets/bluestone.png");
+		//	objectlist.push_back(obj);
+		//}
+		//
+		////back wall / front side
+		//for (int x = 0; x < tilecount * 2; x += 2)
+		//{
+		//	Object* obj = new Object(vec3_new(1, 1, 1), vec3_new(-7 + x, 0, +10), vec3_new(0, 0, 0));
+		//	obj->load_cube_mesh( FRONT, olc::GREEN, "./assets/bluestone.png");
+		//	objectlist.push_back(obj);
+		//}
+		//
+		//
+		////front wall / back side
+		//for (int x = 0; x < tilecount * 2; x += 2)
+		//{
+		//	Object* obj = new Object(vec3_new(1, 1, 1), vec3_new(-7 + x, 0, -2), vec3_new(0, 0, 0));
+		//	obj->load_cube_mesh( BACK, olc::DARK_CYAN, "./assets/bluestone.png");
+		//	objectlist.push_back(obj);
+		//}
 		
 		//floor
 		for (int x = -5; x < tilecount * 2; x += 2)
@@ -424,7 +486,7 @@ public:
 	{
 		cam_prev = get_camera_direction();
 		vec3_t up_direction = { 0,1,0 };
-		
+		prev_rotation = get_camera_yaw();
 		//rendering type
 		if (GetKey(olc::F1).bPressed) { render_method = RENDER_WIRE_VERTEX; };
 		if (GetKey(olc::F2).bPressed) { render_method = RENDER_WIRE; };
@@ -443,35 +505,25 @@ public:
 		if (GetKey(olc::A).bHeld) { rotate_camera_yaw(-1.0f * deltatime); };
 		if (GetKey(olc::D).bHeld) { rotate_camera_yaw(+1.0f * deltatime); };
 
+		curr_rotation = get_camera_yaw();
 		//fps look up and down
 		//if (GetKey(olc::UP).bHeld) { rotate_camera_pitch(+3.0 * deltatime); };
 		//if (GetKey(olc::DOWN).bHeld) { rotate_camera_pitch(-3.0 * deltatime); };
 
 		//object movement controls
 		if (GetKey(olc::I).bHeld) {
-			offsetY = -2.0f;
+			offsetY += -2.0f;
 		}
 		if (GetKey(olc::K).bHeld) {
-			offsetY = +2.0f;
+			offsetY += +2.0f;
 		}
 		if (GetKey(olc::J).bHeld) {
-			offsetX = -0.05f;
+			offsetX += -0.05f;
 		}
 		if (GetKey(olc::L).bHeld) {
-			offsetX = +0.05f;
+			offsetX += +0.05f;
 		}
-		if (GetKey(olc::I).bReleased) {
-			offsetY = 0.0f;
-		}
-		if (GetKey(olc::K).bReleased) {
-			offsetY = 0.0f;
-		}
-		if (GetKey(olc::J).bReleased) {
-			offsetX = 0.0f;
-		}
-		if (GetKey(olc::L).bReleased) {
-			offsetX = 0.0f;
-		}
+		
 
 		if(GetKey(olc::Q).bHeld) 
 		{
@@ -542,7 +594,7 @@ public:
 				obj->mesh->translation = vec3_new(get_camera_position().x, get_camera_position().y, get_camera_position().z);
 			}
 			
-			if (mesh_index == 1)
+			if (mesh_index == 1 || mesh_index == 2)
 			{
 
 				float distx = obj->mesh->translation.x - get_camera_position().x;
@@ -551,23 +603,22 @@ public:
 				
 				float angleplayertoobj = atan2f(distx, distz);
 				
-				obj->mesh->rotation.x += offsetX * fElapsedTime;
-				obj->mesh->rotation.y = angleplayertoobj;
+				float differrotate = curr_rotation - prev_rotation;
+
 				if (obj->ispickedup == true)
 				{
 					obj->mesh->translation = vec3_new(get_camera_position().x, get_camera_position().y, get_camera_position().z + 4);
-					obj->mesh->rotation = vec3_new(0, angleplayertoobj, 0);
+					obj->mesh->rotation = vec3_new(0,get_camera_yaw(), 0);
 				}
 				else
 				{
-					
-
-					
-					obj->mesh->rotation = vec3_new(0, angleplayertoobj, 0);
+					//std::cout << "differrotate: " << differrotate << std::endl;
+					//obj->mesh->translation = vec3_new(get_camera_position().x, 0, get_camera_position().z + 4);
+					//
+					//obj->mesh->rotation = vec3_new(0,0, 0);
 				}
 				
 				
-				//
 				
 			 }
 			
@@ -586,9 +637,9 @@ public:
 			
 		}
 			// currently working stuff
-			int t_length = (int)objectlist[0]->trangles_to_render.size();
+			int t_length = (int)objectlist[1]->trangles_to_render.size();
 
-
+			
 			//collision test
 			cam_acc = vec3_add(cam_acc, gravity);
 
@@ -596,13 +647,29 @@ public:
 
 			cam_prev = cam_curr;
 
+			//collision detection
+			
 
+		
+			float angletoplayer;
+			for (int i = 1; i < 3; i++)
+			{
+				Object* obj = objectlist[i];
+
+				if (isinsight(*obj,i ,25.0f * (3.14159f / 180.0f), angletoplayer))
+				{
+					std::cout << "index: " << i << std::endl;
+					DrawSprite(ScreenWidth() / 2, 50, reticle);
+				}
+
+				
+			}
+
+			Object* player = objectlist[0];
 			for (auto obj : objectlist)
 			{
 				obj->Render(this, depth_draw);
 			}
-
-
 
 			//for (int i = 0; i < t_length; i++)
 			//{

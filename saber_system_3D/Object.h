@@ -10,11 +10,14 @@
 #include "clipping.h"
 #include "depthdrawer.h"
 
+
+
 class Object
 {
 public:
 	Object(vec3_t scale, vec3_t translation, vec3_t rotation);
 
+	void load_shape();
 	void load_cube_mesh(int side, olc::Pixel color, const char* png_filename);
 
 	void load_obj_mesh(const char* obj_filename, const char* png_filename);
@@ -31,6 +34,14 @@ public:
 	mesh_t* mesh;
 	bool ispickedup = false;
 	std::vector<vec3_t*> points;
+
+	//physics test
+	vec3_t velocity;
+	vec3_t acceleration;
+	float mass;
+	float invMass;
+
+
 
 	std::vector<triangle_t> trangles_to_render;
 
