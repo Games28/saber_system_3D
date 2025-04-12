@@ -8,13 +8,19 @@ typedef struct
 	float y;
 }vec2_t;
 
-typedef struct
+struct vec3_t
 {
 	float x;
 	float y;
 	float z;
 
-}vec3_t;
+	//vec3_t operator-() const { return { -x,-y,-z }; }
+	vec3_t operator+(const vec3_t& v) const { return { x + v.x, y + v.y, z + v.z }; }
+	vec3_t operator-(const vec3_t& v) const { return { x - v.x, y - v.y, z - v.z }; }
+	vec3_t operator*(const vec3_t& v) const { return { x * v.x, y * v.y, z * v.z }; }
+	vec3_t operator/(const vec3_t& v) const { return { x / v.x, y / v.y, z / v.z }; }
+	
+};
 
 typedef struct
 {
@@ -48,6 +54,15 @@ vec3_t vec3_cross(vec3_t a, vec3_t b);
 float vec3_dot(vec3_t a, vec3_t b);
 void vec3_normalize(vec3_t* v);
 vec3_t vec3_Max(vec3_t a, vec3_t b);
+//vec3_t normalize(const vec3_t& v) 
+//{
+//	float length = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+//
+//	return { v.x /= length, v.y /= length, v.z /= length };
+//}
+//
+
+
 
 vec3_t vec3_rotate_x(vec3_t v, float angle);
 vec3_t vec3_rotate_y(vec3_t v, float angle);
